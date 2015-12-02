@@ -1,7 +1,8 @@
 #include "pliib.hpp"
 
-std::vector<typename T> p_vv_map(const std::vector<typename T>& v, std::function lambda){
-    std::vector<typename T> results(v.size());
+template <typename T, typename A>
+std::vector<T, A> p_vv_map(const std::vector<T, A>& v, std::function lambda){
+    std::vector<T, A> results(v.size());
     int i;
     // As we guarantee synchronicity,
     // we should TODO something to guarantee it.

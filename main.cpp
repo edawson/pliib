@@ -7,8 +7,7 @@ int main(){
     x.push_back(2);
     x.push_back(1);
 
-    std::vector<int> ret = p_vv_map(x, [](int zed){
-        return zed * zed;
-            };);
+    std::function<int(int)> zed = [](int z){ return (int) z * z; }; 
+    std::vector<int> ret = p_vv_map(x, zed);
     return 0;
 }

@@ -2,6 +2,7 @@
 #include <list>
 #include <vector>
 #include <omp.h>
+#include <functional>
 
 /**
  * This function takes a vector v and applies a lambda
@@ -9,7 +10,8 @@
  * of |v| where v'[i] = L(v[i]). It computes results synchronously
  * (i.e. v'[1] is computed before [v'2].
  */
-std::vector<typename T> p_vv_map(const std::vector<typename T>& v, std::function lambda);
+template <typename T, typename A>
+std::vector<T, A> p_vv_map(const std::vector<T, A>& v, std::function<T(T)> lambda);
 
 //template <typename T, typename U> T<U> p_tt_map(T<U> v, std::function lambda);
 /**
