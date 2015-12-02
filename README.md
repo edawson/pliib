@@ -13,7 +13,7 @@ or in the future.
 ### Why would anyone write this?  
 Mostly for practice, but pliib is also pretty useful. It allows you to use
 multithreading without a lot of work. It's kind of like a C++ version of 
-(LaunChair){https://github.com/edawson/LaunChair} in that it encapsulates
+[LaunChair](https://github.com/edawson/LaunChair) in that it encapsulates
 an existing threading framework (in this case, OpenMP) to prevent the end
 user from having to worry about the details.
 
@@ -26,4 +26,4 @@ some basic tasks.
 
 ### Who unleashed this on the world?
 Eric T Dawson  
-Bugs, comments, PRs, issues: (edawson){https://github.com/edawson}
+Bugs, comments, PRs, issues: [edawson](https://github.com/edawson)
