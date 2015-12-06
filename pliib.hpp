@@ -21,13 +21,13 @@ inline std::vector<DataType, A> p_vv_map(std::vector<DataType, A> v, typename st
     int i;
     // As we guarantee synchronicity,
     //     // we should TODO something to guarantee it.
-    //#pragma omp parallel for
+    #pragma omp parallel for
     for (i = 0; i < v.size(); i++){
-        #pragma omp task
         auto r = lambda(v[i]);
         //#pragma omp critical
         results[i] = r;
     }
+
     return results;
 }
 
@@ -39,6 +39,7 @@ inline std::vector<DataType, A> p_vv_map(std::vector<DataType, A> v, typename st
 template <typename DataType, typename A>
 inline std::vector<DataType, A> p_vv_map_async(std::vector<DataType, A> v, typename std::function<DataType(DataType)> lambda){
     std::vector<DataType, A> results(v.size());
+
     
     return results;
 
