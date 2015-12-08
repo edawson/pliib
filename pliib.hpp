@@ -75,7 +75,11 @@ inline void p_vv_apply(std::vector<DataType, A> &v, typename std::function<DataT
  * Takes a lambda function and applies it across v, then reduces the result
  * to a single <T> value.
  */
-//<T> p_v_reduce(std::vector<T> v, std::function lambda);
+template<typename DataType, typename A>
+inline DataType p_vv_reduce(std::vector<DataType, A> v, typename std::function<DataType(DataType)> lambda){
+    DataType x;
+    return x;
+}
 
 
 /**
