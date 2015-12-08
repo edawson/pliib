@@ -11,6 +11,7 @@ using namespace std;
  * function L to each of its elements. It returns a vector v'
  * of |v| where v'[i] = L(v[i]). It computes results synchronously
  * (i.e. v'[1] is computed before [v'2].
+ *
  */
 //template <typename DataType, typename A>
 //std::vector<DataType, A> p_vv_map( std::vector<DataType, A> v, typename std::function<DataType(DataType)> lambda);
@@ -39,7 +40,13 @@ inline std::vector<DataType, A> p_vv_map(std::vector<DataType, A> v, typename st
 template <typename DataType, typename A>
 inline std::vector<DataType, A> p_vv_map_async(std::vector<DataType, A> v, typename std::function<DataType(DataType)> lambda){
     std::vector<DataType, A> results(v.size());
-
+    int i;
+    cerr << "Asynchronous map is currently broken" << endl;
+    exit(-1);
+    for (i = 0; i < v.size(); i++){
+        #pragma omp task 
+        {results[i] = lambda(v[i]);}
+    }
     
     return results;
 
@@ -50,7 +57,18 @@ inline std::vector<DataType, A> p_vv_map_async(std::vector<DataType, A> v, typen
  * This function applies a lambda function L to all elements of
  * vector v, modifying the elements of v in place.
  */
-//void p_vv_apply(std::vector<T> v, std::function lambda);
+template<typename DataType, typename A>
+inline void p_vv_apply(std::vector<DataType, A> &v, typename std::function<DataType(DataType)> lambda){
+    #pragma omp parallel for //private(i)
+    for (int i = 0; i < v.size(); i++){
+        auto r = lambda(v[i]);
+        
+        //#pragma omp critical
+        //{
+        v[i] = r;
+        //}
+    }
+}
 
 
 /**
@@ -64,6 +82,12 @@ inline std::vector<DataType, A> p_vv_map_async(std::vector<DataType, A> v, typen
  * Applies a bool std::function L across elements in a vector.
  * All elements for which L returns true are return in a new vector.
  */
-//std::vector<T> p_vv_filter(std::vector<T> v, std::function lambda);
+template<typename DataType, typename A>
+std::vector<DataType, A> p_vv_filter(std::vector<DataType, A> v, typename std::function<bool(DataType)> lambda){
+    std::vector<DataType, A> results;
+    cerr << "p_vv_filter not implemented" << endl;
+    exit(-1);
+    return results;
+}
 
 
