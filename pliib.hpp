@@ -22,7 +22,7 @@ inline std::vector<DataType, A> p_vv_map(std::vector<DataType, A> v, typename st
     int i;
     // As we guarantee synchronicity,
     //     // we should TODO something to guarantee it.
-    #pragma omp parallel for
+    #pragma omp parallel for if (v.size() > 1000)
     for (i = 0; i < v.size(); i++){
         auto r = lambda(v[i]);
         //#pragma omp critical
@@ -63,10 +63,8 @@ inline void p_vv_apply(std::vector<DataType, A> &v, typename std::function<DataT
     for (int i = 0; i < v.size(); i++){
         auto r = lambda(v[i]);
         
-        //#pragma omp critical
-        //{
+        #pragma omp atomic write
         v[i] = r;
-        //}
     }
 }
 
