@@ -22,7 +22,7 @@ inline std::vector<DataType, A> p_vv_map(std::vector<DataType, A> v, typename st
     int i;
     // As we guarantee synchronicity,
     //     // we should TODO something to guarantee it.
-    #pragma omp parallel for if (v.size() > 1000)
+    #pragma omp parallel for
     for (i = 0; i < v.size(); i++){
         auto r = lambda(v[i]);
         //#pragma omp critical
@@ -75,6 +75,7 @@ inline void p_vv_apply(std::vector<DataType, A> &v, typename std::function<DataT
  */
 template<typename DataType, typename A>
 inline DataType p_vv_reduce(std::vector<DataType, A> v, typename std::function<DataType(DataType)> lambda){
+    cerr << "reduce is not yet implemented" << endl; exit(1);
     DataType x;
     return x;
 }
@@ -89,6 +90,13 @@ std::vector<DataType, A> p_vv_filter(std::vector<DataType, A> v, typename std::f
     std::vector<DataType, A> results;
     cerr << "p_vv_filter not implemented" << endl;
     exit(-1);
+    #pragma omp parallel for if (v.size() > 1000)
+    for (int i = 0; i < v.size(); i++){
+        if (lambda(v[i])){
+            #pragma omp critical
+            results.push_back(v[i]);
+        }
+    }
     return results;
 }
 
