@@ -16,13 +16,44 @@ using namespace std;
 //template <typename DataType, typename A>
 //std::vector<DataType, A> p_vv_map( std::vector<DataType, A> v, typename std::function<DataType(DataType)> lambda);
 
+char rev_arr [26] = {84, 66, 71, 68, 69, 70, 67, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 65,
+    85, 86, 87, 88, 89, 90};
+inline void reverse_complement(const char* seq, char* ret, int len){
+    for (int i = len - 1; i >=0; i--){
+        ret[ len - 1 - i ] = (char) rev_arr[ (int) seq[i] - 65];
+    }
+}
+
+inline vector<string> split(string s, char delim){
+    vector<string> ret;
+    stringstream sstream(s);
+    string temp;
+    while(getline(sstream, temp, delim)){
+        ret.push_back(temp);
+    }
+    return ret;
+
+}
+
+inline string join(vector<string> splits, string glue){
+    string ret = "";
+    for (int i = 0; i < splits.size(); i++){
+        if (i != 0){
+            ret += glue;
+        }
+        ret += splits[i];
+    }
+
+    return ret;
+}
+
 template <typename DataType, typename A>
 inline std::vector<DataType, A> p_vv_map(std::vector<DataType, A> v, typename std::function<DataType(DataType)> lambda){
     std::vector<DataType> results(v.size());
     int i;
     // As we guarantee synchronicity,
     //     // we should TODO something to guarantee it.
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < v.size(); i++){
         auto r = lambda(v[i]);
         //#pragma omp critical
@@ -44,10 +75,10 @@ inline std::vector<DataType, A> p_vv_map_async(std::vector<DataType, A> v, typen
     cerr << "Asynchronous map is currently broken" << endl;
     exit(-1);
     for (i = 0; i < v.size(); i++){
-        #pragma omp task 
+#pragma omp task 
         {results[i] = lambda(v[i]);}
     }
-    
+
     return results;
 
 }
@@ -59,11 +90,11 @@ inline std::vector<DataType, A> p_vv_map_async(std::vector<DataType, A> v, typen
  */
 template<typename DataType, typename A>
 inline void p_vv_apply(std::vector<DataType, A> &v, typename std::function<DataType(DataType)> lambda){
-    #pragma omp parallel for //private(i)
+#pragma omp parallel for //private(i)
     for (int i = 0; i < v.size(); i++){
         auto r = lambda(v[i]);
-        
-        #pragma omp atomic write
+
+#pragma omp atomic write
         v[i] = r;
     }
 }
@@ -90,10 +121,10 @@ std::vector<DataType, A> p_vv_filter(std::vector<DataType, A> v, typename std::f
     std::vector<DataType, A> results;
     cerr << "p_vv_filter not implemented" << endl;
     exit(-1);
-    #pragma omp parallel for if (v.size() > 1000)
+#pragma omp parallel for if (v.size() > 1000)
     for (int i = 0; i < v.size(); i++){
         if (lambda(v[i])){
-            #pragma omp critical
+#pragma omp critical
             results.push_back(v[i]);
         }
     }
