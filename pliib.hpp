@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <sstream>
 #include <vector>
 #include <functional>
 #include <omp.h>
@@ -22,6 +23,10 @@ inline void reverse_complement(const char* seq, char* ret, int len){
     for (int i = len - 1; i >=0; i--){
         ret[ len - 1 - i ] = (char) rev_arr[ (int) seq[i] - 65];
     }
+}
+
+inline char base_complement(char c){
+    return (char) rev_arr[ (int) c - 65];    
 }
 
 inline vector<string> split(string s, char delim){
