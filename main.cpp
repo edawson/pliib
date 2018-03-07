@@ -1,7 +1,25 @@
 #include "pliib.hpp"
 
 using namespace std;
+using namespace pliib;
 int main(){
+    
+    char to_split [25] = "A;StrING;DeLIMITeD:.;by;";
+    to_split[24] = '\0';
+
+    char** ret;
+    int retsz;
+    int* split_sizes;
+    split(to_split, ';', ret, retsz, split_sizes);
+
+    for (int i = 0; i < retsz; ++i){
+        cout << '"' << ret[i] << '"' << " : sz: " << split_sizes[i] << endl;
+        //cout << '"' << ret[i] << '"' << " : sz: ";
+        //cout << strlen(ret[i]) << endl;
+    }
+
+    
+    
     std::vector<int> x(100000000, 100);
     x.push_back(4);
     x.push_back(3);

@@ -103,14 +103,16 @@ namespace pliib{
             }
         }
     };
+    
 
     // Modified from: https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
-    inline void split(char* s, char delimiter, char**& ret, int& retsize, int* split_sizes){
+    inline void split(char* s, char delimiter, char**& ret, int& retsize, int*& split_sizes){
         int num_delim = 0;
         countChar(s, delimiter, num_delim);
 
         ret = new char*[num_delim + 1];
         retsize = num_delim + 1;
+        split_sizes = new int[num_delim + 1];
 
         ret[0] = s;
 
@@ -120,10 +122,19 @@ namespace pliib{
             *hit = '\0';
             ++hit;
 
-            ret[i++] = hit;
+            ret[i] = hit;
             // Save the length of each string as well.
-            *(split_sizes + (i - 1)) = strlen(ret[i - 1]); 
+            // catch a special case: the string is the empty string
+            if (ret[i - 1][0] == '\0'){
+                *(split_sizes + i - 1) = 0;
+            }
+            else{
+                *(split_sizes + (i - 1)) = strlen(ret[i - 1]); 
+            }
+            ++i;
         }
+        // We need to handle the final string
+        split_sizes[retsize - 1] = strlen(ret[retsize - 1]);
     };
 
     inline void split(string s, char delim, vector<string>& ret){
