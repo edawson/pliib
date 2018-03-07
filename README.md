@@ -1,29 +1,36 @@
-pliib: A hacky little C++ library for replicating Python's multiprocessing functions and doing things in parallel.
+pliib: Some common C++ utility functions for bioinformatics
 -------
 Eric T Dawson  
 December 2015
 
-### What is pliib?
-Pliib (pronounced like "plebe") is a library that contains C++ mirrors of
-Python's multiprocessing library functions. Things like Pools, parallel maps,
-parallel filters, parallel applies and such are all going to be included now
-or in the future.
+### Functionality
+There are two main kinds of functions in this library:  
+  - String manipulation  
+    - Capitalize a string  
+    - Reverse a string  
+    - Reverse compliment a string  
+    - Split a string by a delimiter  
+    - Join a vector of strings by a delimiter  
+
+  - Threadpool-style work functions  
+    - Apply a function to a vector of inputs
+
+### Example Usage:
+    
+            #include "pliib.hpp"
+            using namespace pliib;
+
+            // Split a string:
+            string s = "ACT;TGC;AAA;aNoThErString;"
+            vector<string> ret;
+            split(s, ';', ret);
+            // ret is modified to hold the tokens of s split by semicolons.
+            // ret = {"ACT", "TGC", "AAA", "aNoThErString"}
 
 
-### Why would anyone write this?  
-Mostly for practice, but pliib is also pretty useful. It allows you to use
-multithreading without a lot of work. It's kind of like a C++ version of 
-[LaunChair](https://github.com/edawson/LaunChair) in that it encapsulates
-an existing threading framework (in this case, OpenMP) to prevent the end
-user from having to worry about the details.
+## License:
+MIT
 
-### Why would anyone use this?  
-Pliib's pretty useful if you're a really lazy programmer. You can use
-thread-pool style constructs instead of writing your own OpenMP code. If
-you already know a lot about OpenMP you can probably roll your own solution,
-but pliib is pretty awesome if you just need a quick and dirty way to do
-some basic tasks.
-
-### Who unleashed this on the world?
+### Contact:
 Eric T Dawson  
-Bugs, comments, PRs, issues: [edawson](https://github.com/edawson)
+github: edawson
