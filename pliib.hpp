@@ -1,3 +1,5 @@
+#ifndef PLIIB_D_H
+#define PLIIB_D_H
 #include <iostream>
 #include <list>
 #include <sstream>
@@ -253,3 +255,4 @@ namespace pliib{
         }
 
 }
+#endif
