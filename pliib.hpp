@@ -184,7 +184,7 @@ namespace pliib{
             // we should TODO something to guarantee it.
             #pragma omp parallel for
             for (int i = 0; i < sz; ++i){
-                result[i] = lambda(v[i]);
+                results[i] = lambda(v[i]);
             }
 
             return results;
