@@ -147,7 +147,29 @@ namespace pliib{
 
     };
 
+    inline vector<string> split(string s, char delim){
+    
+        vector<string> ret;
+        int slen = s.length();
+        char s_to_split[slen + 1];
+        strcpy(s_to_split, s.c_str());
 
+        char** splitret;
+        int retsz;
+        int* splitsz;
+
+
+        split(s_to_split, delim, splitret, retsz, splitsz);
+
+        ret.resize(retsz);
+
+        for (int i = 0; i < retsz; ++i){
+            ret[i].assign(string( splitret[i])); 
+        }
+
+        return ret;
+
+    };
     inline vector<string> slow_split(string s, char delim){
         vector<string> ret;
         stringstream sstream(s);
