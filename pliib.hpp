@@ -94,7 +94,6 @@ namespace pliib{
         }
     };
 
-
     // Modified from: https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
     inline void split(char* s, char delimiter, char**& ret, int& retsize, int*& split_sizes){
         int num_delim = 0;
@@ -127,6 +126,14 @@ namespace pliib{
         split_sizes[retsize - 1] = strlen(ret[retsize - 1]);
     };
 
+    inline void destroy_splits(char**& splits, const int& num_splits, int*& split_sizes){
+        //for (int i = 0; i < num_splits; ++i){
+        //    delete [] splits[i];
+        //}
+        delete [] splits;
+        delete [] split_sizes;
+    };
+
     inline void split(string s, char delim, vector<string>& ret){
 
         int slen = s.length();
@@ -145,6 +152,26 @@ namespace pliib{
             ret[i].assign(string( splitret[i])); 
         }
 
+    };
+
+    struct BED_RECORD{
+        char* name;
+        char* contig;
+        uint32_t start;
+        uint32_t end;
+    };
+
+    inline void read_bed_line(char* line, BED_RECORD& bd){
+        char** ret;
+        int retsz;
+        int* split_sizes;
+
+        split(line, '\t', ret, retsz, split_sizes);
+        bd.start = atoi(ret[1]);
+        bd.end = atoi(ret[2]);
+        memcpy(bd.contig, ret[0], split_sizes[0]);
+        memcpy(bd.name, ret[3], split_sizes[3]);
+        destroy_splits(ret, retsz, split_sizes);
     };
 
     inline vector<string> split(string s, char delim){
@@ -179,7 +206,7 @@ namespace pliib{
         }
         return ret;
 
-    }
+    };
 
     inline string join(vector<string> splits, string glue){
         stringstream ret;
