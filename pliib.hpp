@@ -94,6 +94,7 @@ namespace pliib{
         }
     };
 
+
     // Modified from: https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
     inline void split(char* s, char delimiter, char**& ret, int& retsize, int*& split_sizes){
         int num_delim = 0;
@@ -126,14 +127,6 @@ namespace pliib{
         split_sizes[retsize - 1] = strlen(ret[retsize - 1]);
     };
 
-    inline void destroy_splits(char**& splits, const int& num_splits, int*& split_sizes){
-        //for (int i = 0; i < num_splits; ++i){
-        //    delete [] splits[i];
-        //}
-        delete [] splits;
-        delete [] split_sizes;
-    };
-
     inline void split(string s, char delim, vector<string>& ret){
 
         int slen = s.length();
@@ -154,27 +147,7 @@ namespace pliib{
 
     };
 
-    struct BED_RECORD{
-        char* name;
-        char* contig;
-        uint32_t start;
-        uint32_t end;
-    };
-
-    inline void read_bed_line(char* line, BED_RECORD& bd){
-        char** ret;
-        int retsz;
-        int* split_sizes;
-
-        split(line, '\t', ret, retsz, split_sizes);
-        bd.start = atoi(ret[1]);
-        bd.end = atoi(ret[2]);
-        memcpy(bd.contig, ret[0], split_sizes[0]);
-        memcpy(bd.name, ret[3], split_sizes[3]);
-        destroy_splits(ret, retsz, split_sizes);
-    };
-
-    inline vector<string> split(string s, char delim){
+    inline vector<string> split(const string s, const char delim){
     
         vector<string> ret;
         int slen = s.length();
@@ -206,6 +179,107 @@ namespace pliib{
         }
         return ret;
 
+    }
+    inline string join(vector<string> splits, char glue){
+        stringstream ret;
+        for (int i = 0; i < splits.size(); i++){
+            if (i != 0){
+                ret << glue;
+            }
+            ret << splits[i];
+        }
+
+        return ret.str();
+    }
+
+    /** Returns a string s', which is the substring of s before the
+     * first appearance of 'delim'.
+     * If delim is the first character, returns an empty string. **/
+
+    inline void trim_after_char(char*&s, const int& len, char delim){
+        int d_index = 0;
+        while(  d_index < len && s[d_index] != delim){
+            ++d_index;
+        }
+        char* ret = new char[d_index + 1];
+        ret[d_index] = '\0';
+        if (d_index > 0){
+            memcpy(ret, s, d_index * sizeof(char));
+        }
+        delete [] s;
+        s = ret;
+
+    };
+
+    /** Removes a character 'r' when it is seen at either the start or end of a string
+     *  Returns a new string with all such occurrences of 'r' removed.
+     *  s is destroyed in the process and replaced by a new string.
+     *  Works like python's "strip(char)" function. **/
+    inline void strip(char*& s, const int& len, char r){
+        int start = 0;
+        int end = len - 1;
+        while (start < len && s[start] == r){
+            ++start;
+        }
+        while(end > 0 && s[end] == r){
+            --end;
+        }
+        int rsz = end - start + 1;
+        char* ret = new char[rsz + 1];
+        memcpy(ret, s + start, rsz * sizeof(char));
+        // cerr << ret << endl;
+        ret[rsz] = '\0';
+        delete [] s;
+        s = ret;
+    };
+
+
+    /** Removes a character from within a string **/
+    inline void remove_char(char*& s, const int& len, char r){
+        int write_index = 0;
+        int read_index = 0;
+        for (int i = 0; i < len, read_index < len; ++i){
+            if (s[i] != r){
+                s[write_index] = s[read_index];
+                ++write_index;
+            }
+            ++read_index;
+        }
+        s[write_index] = '\0';
+    };
+
+    /** Removes any null or whitespace characters from within a string
+     *  where whitespace is ' ' or '\t' or '\n'.
+     *  Complexity: linear time in |s| **/
+    inline void remove_nulls_and_whitespace(char*& s, const int& len){
+        int write_index = 0;
+        int read_index = 0;
+        for (int i = 0; i < len, read_index < len; ++i){
+            if (s[i] != '\n' && s[i] != '\t' && s[i] != '\0' && s[i] != ' '){
+                s[write_index] = s[read_index];
+                ++write_index;
+            }
+            ++read_index;
+        }
+        s[write_index] = '\0';
+    };
+
+    inline void paste(const char** splits, const int& numsplits, const int* splitlens, char*& ret){
+
+        int sz = 0;
+        for (int i = 0; i < numsplits; ++i){
+            sz += splitlens[i];
+        }
+        ret = new char[sz + 1];
+        ret[sz] = '\0';
+
+        int r_pos = 0;
+        for (int i = 0; i < numsplits; ++i){
+            for (int j = 0; j < splitlens[i]; ++j){
+                ret[r_pos] = splits[i][j];
+                ++r_pos;
+            }
+        }
     };
 
     inline string join(vector<string> splits, string glue){
