@@ -171,6 +171,18 @@ namespace pliib{
         return ret.str();
     }
 
+    // TODO convert to template
+    inline string join(uint64_t* x, int xlen, char glue){
+        stringstream ret;
+        for (int i = 0; i < xlen; i++){
+            if (i != 0){
+                ret << glue;
+            }
+            ret << x[i];
+        }
+        return ret.str();
+    };
+
 
     /** 
      * Applies a lambda function lambda to all elements of a vector v, returning
