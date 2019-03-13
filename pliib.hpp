@@ -49,6 +49,15 @@ namespace pliib{
         COMPLEX
     };
 
+    inline void strcopy(const char* src, const int& len, char*& dest){
+       dest = new char[len+1];
+       std::strcpy(dest, src);
+    };
+
+    inline void strcopy(const char* src, char*& dest){
+        strcopy(src, strlen(src), dest);
+    }; 
+
     // Check a string (as a char*) for non-canonical DNA bases
     inline bool canonical(const char* x, int len){
         bool trip = false;
