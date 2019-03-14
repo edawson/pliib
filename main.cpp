@@ -18,6 +18,9 @@ int main(){
         //cout << strlen(ret[i]) << endl;
     }
 
+    
+    cout << pliib::join(ret, retsz, '\t') << endl;
+
     string t ("A substring to grab.");
     char* sub;
     pliib::slice(t.c_str(), 2, 11, sub);
