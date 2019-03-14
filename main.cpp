@@ -4,9 +4,9 @@ using namespace std;
 using namespace pliib;
 int main(){
     
-    char to_split [25] = "A;StrING;DeLIMITeD:.;by;";
-    to_split[24] = '\0';
-
+    char* to_split;
+    string s ("A;StrING;DeLIMITeD:.;by;");
+    pliib::strcopy(s.c_str(), to_split);
     char** ret;
     int retsz;
     int* split_sizes;
@@ -17,6 +17,11 @@ int main(){
         //cout << '"' << ret[i] << '"' << " : sz: ";
         //cout << strlen(ret[i]) << endl;
     }
+
+    string t ("A substring to grab.");
+    char* sub;
+    pliib::slice(t.c_str(), 2, 11, sub);
+    cout << sub << endl;
 
     
     

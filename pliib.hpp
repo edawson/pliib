@@ -49,9 +49,10 @@ namespace pliib{
         COMPLEX
     };
 
-    inline void strcopy(const char* src, const int& len, char*& dest){
+    inline void strcopy(const char* src, const std::size_t& len, char*& dest){
        dest = new char[len+1];
-       std::strcpy(dest, src);
+       dest[len] = '\0';
+       std::strncpy(dest, src, len);
     };
 
     inline void strcopy(const char* src, char*& dest){
@@ -266,6 +267,10 @@ namespace pliib{
         memcpy(t, s.c_str(), slen);
         strip(t, slen, r);
         s = std::string(t);
+    };
+
+    inline void slice(const char* s, size_t start, size_t end, char*& ret){
+       strcopy(s + start, end - start, ret); 
     };
 
 
