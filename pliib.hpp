@@ -327,6 +327,18 @@ namespace pliib{
         return ret.str();
     }
 
+    template<typename X>
+    inline string join(X* x, std::size_t xlen, char glue){
+        ostringstream ret;
+        for (size_t i = 0; i < xlen; ++i){
+            if (i != 0){
+                ret << glue;
+            }
+            ret << x[i];
+        }
+        return ret.str();
+    };
+
     // TODO convert to template
     inline string join(uint64_t* x, int xlen, char glue){
         stringstream ret;
