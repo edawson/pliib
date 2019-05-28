@@ -10,9 +10,10 @@
 #include <omp.h>
 #include <functional>
 
+namespace pliib{
+
 using namespace std;
 
-namespace pliib{
     // Char table to test for canonical bases
     static const int valid_dna[127] = {
         1,
