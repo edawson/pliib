@@ -12,8 +12,6 @@
 
 namespace pliib{
 
-using namespace std;
-
     // Char table to test for canonical bases
     static const int valid_dna[127] = {
         1,
@@ -57,7 +55,7 @@ using namespace std;
     };
 
     inline void strcopy(const char* src, char*& dest){
-        strcopy(src, strlen(src), dest);
+        pliib::strcopy(src, strlen(src), dest);
     }; 
 
     // Check a string (as a char*) for non-canonical DNA bases
@@ -69,7 +67,7 @@ using namespace std;
         return !trip;
     };
 
-    inline bool canonical(string seq){
+    inline bool canonical(std::string seq){
         const char* x = seq.c_str();
         int len = seq.length();
         return canonical(x, len);
@@ -96,7 +94,7 @@ using namespace std;
     };
 
     /* Capitalize a string */
-    inline string to_upper(string& seq){
+    inline std::string to_upper(std::string& seq){
         for (size_t i = 0; i < seq.length(); i++){
             char c = seq[i];
             seq[i] =  ((c - 91) > 0 ? c - 32 : c);
@@ -121,7 +119,7 @@ using namespace std;
     // Modified from: https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
     inline void split(char*& s, char delimiter, char**& ret, int& retsize, int*& split_sizes){
         int num_delim = 0;
-        countChar(s, delimiter, num_delim);
+        pliib::countChar(s, delimiter, num_delim);
 
         ret = new char*[num_delim + 1];
         retsize = num_delim + 1;
@@ -150,7 +148,7 @@ using namespace std;
         split_sizes[retsize - 1] = strlen(ret[retsize - 1]);
     };
 
-    inline void split(string s, char delim, vector<string>& ret){
+    inline void split(std::string s, char delim, std::vector<std::string>& ret){
 
         int slen = s.length();
         char* s_to_split = new char[slen + 1];
@@ -165,20 +163,20 @@ using namespace std;
         ret.resize(retsz);
 
         for (int i = 0; i < retsz; ++i){
-            ret[i].assign(string( splitret[i])); 
+            ret[i].assign(std::string( splitret[i])); 
         }
         destroy_splits(splitret, retsz, splitsz);
         delete [] s_to_split;
 
     };
 
-    inline vector<string> split(const string s, const char delim){
+    inline std::vector<std::string> split(const std::string s, const char delim){
     
-        vector<string> ret;
+        std::vector<std::string> ret;
         int slen = s.length();
         char* s_to_split = new char[slen + 1];
 
-        strncpy(s_to_split, s.c_str(), slen);
+        std::strncpy(s_to_split, s.c_str(), slen);
         s_to_split[slen] = '\0';
 
         char** splitret;
@@ -186,31 +184,31 @@ using namespace std;
         int* splitsz;
 
 
-        split(s_to_split, delim, splitret, retsz, splitsz);
+        pliib::split(s_to_split, delim, splitret, retsz, splitsz);
 
         ret.resize(retsz);
 
         for (int i = 0; i < retsz; ++i){
-            ret[i].assign(string( splitret[i])); 
+            ret[i].assign(std::string( splitret[i])); 
         }
-        destroy_splits(splitret, retsz, splitsz);
+        pliib::destroy_splits(splitret, retsz, splitsz);
         delete [] s_to_split;
 
         return ret;
 
     };
-    inline vector<string> slow_split(string s, char delim){
-        vector<string> ret;
-        stringstream sstream(s);
-        string temp;
-        while(getline(sstream, temp, delim)){
+    inline std::vector<std::string> slow_split(std::string s, char delim){
+        std::vector<std::string> ret;
+        std::stringstream sstream(s);
+        std::string temp;
+        while(std::getline(sstream, temp, delim)){
             ret.push_back(temp);
         }
         return ret;
 
     }
-    inline string join(const vector<string>& splits, char glue){
-        stringstream ret;
+    inline std::string join(const std::vector<std::string>& splits, char glue){
+        std::stringstream ret;
         for (size_t i = 0; i < splits.size(); i++){
             if (i != 0){
                 ret << glue;
@@ -321,8 +319,8 @@ using namespace std;
         }
     };
 
-    inline string join(vector<string> splits, string glue){
-        stringstream ret;
+    inline std::string join(std::vector<std::string> splits, std::string glue){
+        std::stringstream ret;
         for (int i = 0; i < splits.size(); i++){
             if (i != 0){
                 ret << glue;
@@ -334,8 +332,8 @@ using namespace std;
     }
 
     template<typename X>
-    inline string join(X* x, std::size_t xlen, char glue){
-        ostringstream ret;
+    inline std::string join(X* x, std::size_t xlen, char glue){
+        std::ostringstream ret;
         for (size_t i = 0; i < xlen; ++i){
             if (i != 0){
                 ret << glue;
@@ -346,8 +344,8 @@ using namespace std;
     };
 
     // TODO convert to template
-    inline string join(uint64_t* x, int xlen, char glue){
-        stringstream ret;
+    inline std::string join(std::uint64_t* x, int xlen, char glue){
+        std::stringstream ret;
         for (int i = 0; i < xlen; i++){
             if (i != 0){
                 ret << glue;
