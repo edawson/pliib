@@ -10,9 +10,10 @@
 #include <omp.h>
 #include <functional>
 
+namespace pliib{
+
 using namespace std;
 
-namespace pliib{
     // Char table to test for canonical bases
     static const int valid_dna[127] = {
         1,
@@ -48,6 +49,16 @@ namespace pliib{
         INTERCHROM,
         COMPLEX
     };
+
+    inline void strcopy(const char* src, const std::size_t& len, char*& dest){
+       dest = new char[len+1];
+       dest[len] = '\0';
+       std::strncpy(dest, src, len);
+    };
+
+    inline void strcopy(const char* src, char*& dest){
+        strcopy(src, strlen(src), dest);
+    }; 
 
     // Check a string (as a char*) for non-canonical DNA bases
     inline bool canonical(const char* x, int len){
@@ -259,6 +270,10 @@ namespace pliib{
         s = std::string(t);
     };
 
+    inline void slice(const char* s, size_t start, size_t end, char*& ret){
+       strcopy(s + start, end - start, ret); 
+    };
+
 
     /** Removes a character from within a string **/
     inline void remove_char(char*& s, const int& len, char r){
@@ -317,6 +332,18 @@ namespace pliib{
 
         return ret.str();
     }
+
+    template<typename X>
+    inline string join(X* x, std::size_t xlen, char glue){
+        ostringstream ret;
+        for (size_t i = 0; i < xlen; ++i){
+            if (i != 0){
+                ret << glue;
+            }
+            ret << x[i];
+        }
+        return ret.str();
+    };
 
     // TODO convert to template
     inline string join(uint64_t* x, int xlen, char glue){
