@@ -6,11 +6,12 @@ int main(){
     
     char* to_split;
     string s ("A;StrING;DeLIMITeD:.;by;");
-    pliib::strcopy(s.c_str(), to_split);
+    pliib::strcopy(s.c_str(), s.length(), to_split);
+    cout << "Copied " << s << " to " << to_split << endl;
     char** ret;
     int retsz;
     int* split_sizes;
-    split((&to_split)[26], ';', ret, retsz, split_sizes);
+    split(to_split, ';', ret, retsz, split_sizes);
 
     for (int i = 0; i < retsz; ++i){
         cout << '"' << ret[i] << '"' << " : sz: " << split_sizes[i] << endl;
