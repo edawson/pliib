@@ -58,7 +58,13 @@ using namespace std;
 
     inline void strcopy(const char* src, char*& dest){
         strcopy(src, strlen(src), dest);
-    }; 
+    };
+
+    inline void strdelete(char*& p){
+        if (p != nullptr){
+            delete [] p;
+        }
+    };
 
     // Check a string (as a char*) for non-canonical DNA bases
     inline bool canonical(const char* x, int len){
