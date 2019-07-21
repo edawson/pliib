@@ -82,7 +82,7 @@ using namespace std;
     };
 
 
-    inline void reverse_complement(const char* seq, char* ret, int len){
+    inline void reverse_complement(const char* seq, char*& ret, int len){
         for (int i = len - 1; i >=0; i--){
             ret[ len - 1 - i ] = (char) complement_array[ (int) seq[i] - 65];
         }
