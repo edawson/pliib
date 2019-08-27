@@ -54,17 +54,17 @@ using namespace std;
        dest = new char[len+1];
        dest[len] = '\0';
        std::strncpy(dest, src, len);
-    };
+    }
 
     inline void strcopy(const char* src, char*& dest){
         strcopy(src, strlen(src), dest);
-    };
+    }
 
     inline void strdelete(char*& p){
         if (p != nullptr){
             delete [] p;
         }
-    };
+    }
 
     // Check a string (as a char*) for non-canonical DNA bases
     inline bool canonical(const char* x, int len){
@@ -73,13 +73,13 @@ using namespace std;
             trip |= valid_dna[ static_cast<int> (x[i]) ];
         }
         return !trip;
-    };
+    }
 
     inline bool canonical(string seq){
         const char* x = seq.c_str();
         int len = seq.length();
         return canonical(x, len);
-    };
+    }
 
 
     inline void reverse_complement(const char* seq, char*& ret, int len){
@@ -99,7 +99,7 @@ using namespace std;
             char c = seq[i];
             seq[i] = ( (c - 91) > 0 ? c - 32 : c);
         }
-    };
+    }
 
     /* Capitalize a string */
     inline string to_upper(string& seq){
@@ -108,7 +108,7 @@ using namespace std;
             seq[i] =  ((c - 91) > 0 ? c - 32 : c);
         }
         return seq;
-    };
+    }
 
     inline void countChar(const char* s, char c, int& ret) {
         ret = 0;
@@ -117,12 +117,12 @@ using namespace std;
                 ++ret;
             }
         }
-    };
+    }
 
     inline void destroy_splits(char**& splits, const int& num_splits, int*& split_sizes){
         delete [] splits;
         delete [] split_sizes;
-    };
+    }
 
     // Modified from: https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
     inline void split(char*& s, char delimiter, char**& ret, int& retsize, int*& split_sizes){
@@ -154,7 +154,7 @@ using namespace std;
         }
         // We need to handle the final string
         split_sizes[retsize - 1] = strlen(ret[retsize - 1]);
-    };
+    }
 
     inline void split(string s, char delim, vector<string>& ret){
 
@@ -176,7 +176,7 @@ using namespace std;
         destroy_splits(splitret, retsz, splitsz);
         delete [] s_to_split;
 
-    };
+    }
 
     inline vector<string> split(const string s, const char delim){
     
@@ -204,7 +204,7 @@ using namespace std;
 
         return ret;
 
-    };
+    }
     inline vector<string> slow_split(string s, char delim){
         vector<string> ret;
         stringstream sstream(s);
@@ -244,7 +244,7 @@ using namespace std;
         delete [] s;
         s = ret;
 
-    };
+    }
 
     /** Removes a character 'r' when it is seen at either the start or end of a string
      *  Returns a new string with all such occurrences of 'r' removed.
@@ -266,7 +266,7 @@ using namespace std;
         ret[rsz] = '\0';
         delete [] s;
         s = ret;
-    };
+    }
 
     inline void strip(std::string& s, char r){
         int slen = s.length();
@@ -274,11 +274,11 @@ using namespace std;
         memcpy(t, s.c_str(), slen);
         strip(t, slen, r);
         s = std::string(t);
-    };
+    }
 
     inline void slice(const char* s, size_t start, size_t end, char*& ret){
        strcopy(s + start, end - start, ret); 
-    };
+    }
 
 
     /** Removes a character from within a string **/
@@ -293,7 +293,7 @@ using namespace std;
             ++read_index;
         }
         s[write_index] = '\0';
-    };
+    }
 
     /** Removes any null or whitespace characters from within a string
      *  where whitespace is ' ' or '\t' or '\n'.
@@ -307,7 +307,7 @@ using namespace std;
             }
         }
         s[write_index] = '\0';
-    };
+    }
 
     inline void paste(const char** splits, const int& numsplits, const int* splitlens, char*& ret){
 
@@ -325,7 +325,7 @@ using namespace std;
                 ++r_pos;
             }
         }
-    };
+    }
 
     inline string join(vector<string> splits, string glue){
         stringstream ret;
@@ -349,7 +349,7 @@ using namespace std;
             ret << x[i];
         }
         return ret.str();
-    };
+    }
 
     // TODO convert to template
     inline string join(uint64_t* x, int xlen, char glue){
@@ -362,7 +362,7 @@ using namespace std;
         }
         return ret.str();
 
-    };
+    }
     inline void parse_breakend_field(const char* bend,
         const int& len,
         char*& contig,
@@ -402,7 +402,7 @@ using namespace std;
         memcpy(pstr, bend + colon_index + 1, last_bracket_index - colon_index - 1);
         position = atoi(pstr);
 
-    };
+    }
 
 
     /** 
@@ -435,7 +435,7 @@ using namespace std;
                 }
             }
             return results;
-        };
+        }
 
 
     /**
