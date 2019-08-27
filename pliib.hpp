@@ -285,7 +285,7 @@ using namespace std;
     inline void remove_char(char*& s, const int& len, char r){
         int write_index = 0;
         int read_index = 0;
-        for (int i = 0; i < len, read_index < len; ++i){
+        for (int i = 0; i < len && read_index < len; ++i){
             if (s[i] != r){
                 s[write_index] = s[read_index];
                 ++write_index;
