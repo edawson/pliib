@@ -300,7 +300,7 @@ using namespace std;
      *  Complexity: linear time in |s| **/
     inline void remove_nulls_and_whitespace(char*& s, const int& len){
         size_t write_index = 0;
-        for (size_t i = 0; i < len; ++i){
+        for (int i = 0; i < len; ++i){
             if (s[i] != '\n' && s[i] != '\t' && s[i] != '\0' && s[i] != ' '){
                 s[write_index] = s[i];
                 ++write_index;
@@ -329,7 +329,7 @@ using namespace std;
 
     inline string join(vector<string> splits, string glue){
         stringstream ret;
-        for (int i = 0; i < splits.size(); i++){
+        for (size_t i = 0; i < splits.size(); i++){
             if (i != 0){
                 ret << glue;
             }
