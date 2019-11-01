@@ -10,10 +10,8 @@
 #include <omp.h>
 #include <functional>
 
+
 namespace pliib{
-
-using namespace std;
-
     // Char table to test for canonical bases
     static const int valid_dna[127] = {
         1,
@@ -58,24 +56,24 @@ using namespace std;
 
     inline void strcopy(const char* src, char*& dest){
         strcopy(src, strlen(src), dest);
-    }
-
+    } 
+   
     inline void strdelete(char*& p){
         if (p != nullptr){
             delete [] p;
         }
-    }
+    } 
 
     // Check a string (as a char*) for non-canonical DNA bases
     inline bool canonical(const char* x, int len){
         bool trip = false;
-        for (int i = 0; i < len; ++i){
+        for (size_t i = 0; i < len; ++i){
             trip |= valid_dna[ static_cast<int> (x[i]) ];
         }
         return !trip;
     }
 
-    inline bool canonical(string seq){
+    inline bool canonical(std::string seq){
         const char* x = seq.c_str();
         int len = seq.length();
         return canonical(x, len);
@@ -83,7 +81,7 @@ using namespace std;
 
 
     inline void reverse_complement(const char* seq, char*& ret, int len){
-        for (int i = len - 1; i >=0; i--){
+        for (size_t i = len - 1; i >=0; i--){
             ret[ len - 1 - i ] = (char) complement_array[ (int) seq[i] - 65];
         }
     }
@@ -95,14 +93,14 @@ using namespace std;
     /* Capitalize all characters in a string */
     /* Capitalize a C string */
     inline void to_upper(char* seq, int length){
-        for (int i = 0; i < length; i++){
+        for (size_t i = 0; i < length; i++){
             char c = seq[i];
             seq[i] = ( (c - 91) > 0 ? c - 32 : c);
         }
     }
 
     /* Capitalize a string */
-    inline string to_upper(string& seq){
+    inline std::string to_upper(std::string& seq){
         for (size_t i = 0; i < seq.length(); i++){
             char c = seq[i];
             seq[i] =  ((c - 91) > 0 ? c - 32 : c);
@@ -156,7 +154,7 @@ using namespace std;
         split_sizes[retsize - 1] = strlen(ret[retsize - 1]);
     }
 
-    inline void split(string s, char delim, vector<string>& ret){
+    inline void split(std::string s, char delim, std::vector<std::string>& ret){
 
         int slen = s.length();
         char* s_to_split = new char[slen + 1];
@@ -170,17 +168,17 @@ using namespace std;
         split(s_to_split, delim, splitret, retsz, splitsz);
         ret.resize(retsz);
 
-        for (int i = 0; i < retsz; ++i){
-            ret[i].assign(string( splitret[i])); 
+        for (size_t i = 0; i < retsz; ++i){
+            ret[i].assign(std::string( splitret[i])); 
         }
         destroy_splits(splitret, retsz, splitsz);
         delete [] s_to_split;
 
     }
 
-    inline vector<string> split(const string s, const char delim){
+    inline std::vector<std::string> split(const std::string s, const char delim){
     
-        vector<string> ret;
+        std::vector<std::string> ret;
         int slen = s.length();
         char* s_to_split = new char[slen + 1];
 
@@ -196,8 +194,8 @@ using namespace std;
 
         ret.resize(retsz);
 
-        for (int i = 0; i < retsz; ++i){
-            ret[i].assign(string( splitret[i])); 
+        for (size_t i = 0; i < retsz; ++i){
+            ret[i].assign(std::string( splitret[i])); 
         }
         destroy_splits(splitret, retsz, splitsz);
         delete [] s_to_split;
@@ -205,18 +203,18 @@ using namespace std;
         return ret;
 
     }
-    inline vector<string> slow_split(string s, char delim){
-        vector<string> ret;
-        stringstream sstream(s);
-        string temp;
+    inline std::vector<std::string> slow_split(std::string s, char delim){
+        std::vector<std::string> ret;
+        std::stringstream sstream(s);
+        std::string temp;
         while(getline(sstream, temp, delim)){
             ret.push_back(temp);
         }
         return ret;
 
     }
-    inline string join(const vector<string>& splits, char glue){
-        stringstream ret;
+    inline std::string join(const std::vector<std::string>& splits, char glue){
+        std::stringstream ret;
         for (size_t i = 0; i < splits.size(); i++){
             if (i != 0){
                 ret << glue;
@@ -285,7 +283,7 @@ using namespace std;
     inline void remove_char(char*& s, const int& len, char r){
         int write_index = 0;
         int read_index = 0;
-        for (int i = 0; i < len && read_index < len; ++i){
+        for (size_t i = 0; i < len, read_index < len; ++i){
             if (s[i] != r){
                 s[write_index] = s[read_index];
                 ++write_index;
@@ -300,7 +298,7 @@ using namespace std;
      *  Complexity: linear time in |s| **/
     inline void remove_nulls_and_whitespace(char*& s, const int& len){
         size_t write_index = 0;
-        for (int i = 0; i < len; ++i){
+        for (size_t i = 0; i < len; ++i){
             if (s[i] != '\n' && s[i] != '\t' && s[i] != '\0' && s[i] != ' '){
                 s[write_index] = s[i];
                 ++write_index;
@@ -312,23 +310,23 @@ using namespace std;
     inline void paste(const char** splits, const int& numsplits, const int* splitlens, char*& ret){
 
         int sz = 0;
-        for (int i = 0; i < numsplits; ++i){
+        for (size_t i = 0; i < numsplits; ++i){
             sz += splitlens[i];
         }
         ret = new char[sz + 1];
         ret[sz] = '\0';
 
         int r_pos = 0;
-        for (int i = 0; i < numsplits; ++i){
-            for (int j = 0; j < splitlens[i]; ++j){
+        for (size_t i = 0; i < numsplits; ++i){
+            for (size_t j = 0; j < splitlens[i]; ++j){
                 ret[r_pos] = splits[i][j];
                 ++r_pos;
             }
         }
     }
 
-    inline string join(vector<string> splits, string glue){
-        stringstream ret;
+    inline std::string join(std::vector<std::string> splits, std::string glue){
+        std::stringstream ret;
         for (size_t i = 0; i < splits.size(); i++){
             if (i != 0){
                 ret << glue;
@@ -340,8 +338,8 @@ using namespace std;
     }
 
     template<typename X>
-    inline string join(X* x, std::size_t xlen, char glue){
-        ostringstream ret;
+    inline std::string join(X* x, std::size_t xlen, char glue){
+        std::ostringstream ret;
         for (size_t i = 0; i < xlen; ++i){
             if (i != 0){
                 ret << glue;
@@ -352,9 +350,9 @@ using namespace std;
     }
 
     // TODO convert to template
-    inline string join(uint64_t* x, int xlen, char glue){
-        stringstream ret;
-        for (int i = 0; i < xlen; i++){
+    inline std::string join(uint64_t* x, int xlen, char glue){
+        std::stringstream ret;
+        for (size_t i = 0; i < xlen; i++){
             if (i != 0){
                 ret << glue;
             }
