@@ -52,30 +52,36 @@ namespace pliib{
        dest = new char[len+1];
        dest[len] = '\0';
        std::strncpy(dest, src, len);
-    };
+    }
 
     inline void strcopy(const char* src, char*& dest){
         pliib::strcopy(src, strlen(src), dest);
     }; 
+   
+    inline void strdelete(char*& p){
+        if (p != nullptr){
+            delete [] p;
+        }
+    } 
 
     // Check a string (as a char*) for non-canonical DNA bases
     inline bool canonical(const char* x, int len){
         bool trip = false;
-        for (int i = 0; i < len; ++i){
+        for (size_t i = 0; i < len; ++i){
             trip |= valid_dna[ static_cast<int> (x[i]) ];
         }
         return !trip;
-    };
+    }
 
     inline bool canonical(std::string seq){
         const char* x = seq.c_str();
         int len = seq.length();
         return canonical(x, len);
-    };
+    }
 
 
-    inline void reverse_complement(const char* seq, char* ret, int len){
-        for (int i = len - 1; i >=0; i--){
+    inline void reverse_complement(const char* seq, char*& ret, int len){
+        for (size_t i = len - 1; i >=0; i--){
             ret[ len - 1 - i ] = (char) complement_array[ (int) seq[i] - 65];
         }
     }
@@ -87,11 +93,11 @@ namespace pliib{
     /* Capitalize all characters in a string */
     /* Capitalize a C string */
     inline void to_upper(char* seq, int length){
-        for (int i = 0; i < length; i++){
+        for (size_t i = 0; i < length; i++){
             char c = seq[i];
             seq[i] = ( (c - 91) > 0 ? c - 32 : c);
         }
-    };
+    }
 
     /* Capitalize a string */
     inline std::string to_upper(std::string& seq){
@@ -100,7 +106,7 @@ namespace pliib{
             seq[i] =  ((c - 91) > 0 ? c - 32 : c);
         }
         return seq;
-    };
+    }
 
     inline void countChar(const char* s, char c, int& ret) {
         ret = 0;
@@ -109,12 +115,12 @@ namespace pliib{
                 ++ret;
             }
         }
-    };
+    }
 
     inline void destroy_splits(char**& splits, const int& num_splits, int*& split_sizes){
         delete [] splits;
         delete [] split_sizes;
-    };
+    }
 
     // Modified from: https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
     inline void split(char*& s, char delimiter, char**& ret, int& retsize, int*& split_sizes){
@@ -146,7 +152,7 @@ namespace pliib{
         }
         // We need to handle the final string
         split_sizes[retsize - 1] = strlen(ret[retsize - 1]);
-    };
+    }
 
     inline void split(std::string s, char delim, std::vector<std::string>& ret){
 
@@ -162,13 +168,13 @@ namespace pliib{
         split(s_to_split, delim, splitret, retsz, splitsz);
         ret.resize(retsz);
 
-        for (int i = 0; i < retsz; ++i){
+        for (std::size_t i = 0; i < retsz; ++i){
             ret[i].assign(std::string( splitret[i])); 
         }
-        destroy_splits(splitret, retsz, splitsz);
+        pliib::destroy_splits(splitret, retsz, splitsz);
         delete [] s_to_split;
 
-    };
+    }
 
     inline std::vector<std::string> split(const std::string s, const char delim){
     
@@ -188,7 +194,7 @@ namespace pliib{
 
         ret.resize(retsz);
 
-        for (int i = 0; i < retsz; ++i){
+        for (std::size_t i = 0; i < retsz; ++i){
             ret[i].assign(std::string( splitret[i])); 
         }
         pliib::destroy_splits(splitret, retsz, splitsz);
@@ -196,7 +202,7 @@ namespace pliib{
 
         return ret;
 
-    };
+    }
     inline std::vector<std::string> slow_split(std::string s, char delim){
         std::vector<std::string> ret;
         std::stringstream sstream(s);
@@ -236,7 +242,7 @@ namespace pliib{
         delete [] s;
         s = ret;
 
-    };
+    }
 
     /** Removes a character 'r' when it is seen at either the start or end of a string
      *  Returns a new string with all such occurrences of 'r' removed.
@@ -258,7 +264,7 @@ namespace pliib{
         ret[rsz] = '\0';
         delete [] s;
         s = ret;
-    };
+    }
 
     inline void strip(std::string& s, char r){
         int slen = s.length();
@@ -266,18 +272,18 @@ namespace pliib{
         memcpy(t, s.c_str(), slen);
         strip(t, slen, r);
         s = std::string(t);
-    };
+    }
 
     inline void slice(const char* s, size_t start, size_t end, char*& ret){
        strcopy(s + start, end - start, ret); 
-    };
+    }
 
 
     /** Removes a character from within a string **/
     inline void remove_char(char*& s, const int& len, char r){
         int write_index = 0;
         int read_index = 0;
-        for (int i = 0; i < len, read_index < len; ++i){
+        for (size_t i = 0; i < len, read_index < len; ++i){
             if (s[i] != r){
                 s[write_index] = s[read_index];
                 ++write_index;
@@ -285,7 +291,7 @@ namespace pliib{
             ++read_index;
         }
         s[write_index] = '\0';
-    };
+    }
 
     /** Removes any null or whitespace characters from within a string
      *  where whitespace is ' ' or '\t' or '\n'.
@@ -299,29 +305,29 @@ namespace pliib{
             }
         }
         s[write_index] = '\0';
-    };
+    }
 
     inline void paste(const char** splits, const int& numsplits, const int* splitlens, char*& ret){
 
         int sz = 0;
-        for (int i = 0; i < numsplits; ++i){
+        for (size_t i = 0; i < numsplits; ++i){
             sz += splitlens[i];
         }
         ret = new char[sz + 1];
         ret[sz] = '\0';
 
         int r_pos = 0;
-        for (int i = 0; i < numsplits; ++i){
-            for (int j = 0; j < splitlens[i]; ++j){
+        for (size_t i = 0; i < numsplits; ++i){
+            for (size_t j = 0; j < splitlens[i]; ++j){
                 ret[r_pos] = splits[i][j];
                 ++r_pos;
             }
         }
-    };
+    }
 
     inline std::string join(std::vector<std::string> splits, std::string glue){
         std::stringstream ret;
-        for (int i = 0; i < splits.size(); i++){
+        for (std::size_t i = 0; i < splits.size(); i++){
             if (i != 0){
                 ret << glue;
             }
@@ -341,12 +347,12 @@ namespace pliib{
             ret << x[i];
         }
         return ret.str();
-    };
+    }
 
     // TODO convert to template
     inline std::string join(std::uint64_t* x, int xlen, char glue){
         std::stringstream ret;
-        for (int i = 0; i < xlen; i++){
+        for (std::size_t i = 0; i < xlen; i++){
             if (i != 0){
                 ret << glue;
             }
@@ -354,7 +360,7 @@ namespace pliib{
         }
         return ret.str();
 
-    };
+    }
     inline void parse_breakend_field(const char* bend,
         const int& len,
         char*& contig,
@@ -394,7 +400,7 @@ namespace pliib{
         memcpy(pstr, bend + colon_index + 1, last_bracket_index - colon_index - 1);
         position = atoi(pstr);
 
-    };
+    }
 
 
     /** 
@@ -427,7 +433,7 @@ namespace pliib{
                 }
             }
             return results;
-        };
+        }
 
 
     /**
