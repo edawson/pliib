@@ -14,13 +14,13 @@ TEST_CASE("fast split function performs as expected", "[split]"){
     to_split[24] = '\0';
 
     SECTION("The countChar function works as expected"){
-        int num;
+        std::size_t num;
         countChar(to_split, ';', num);
         REQUIRE(num == 4);
     }
 
     char** ret;
-    int retsz;
+    std::size_t retsz;
     int* split_sizes;
     split(to_split, ';', ret, retsz, split_sizes);
 
