@@ -284,7 +284,7 @@ namespace pliib{
     inline void remove_char(char*& s, const std::size_t& len, char r){
         std::size_t write_index = 0;
         std::size_t read_index = 0;
-        for (std::size_t i = 0; i < len, read_index < len; ++i){
+        for (std::size_t i = 0; i < len && read_index < len; ++i){
             if (s[i] != r){
                 s[write_index] = s[read_index];
                 ++write_index;
