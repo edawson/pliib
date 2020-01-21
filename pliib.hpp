@@ -110,10 +110,11 @@ namespace pliib{
 
     inline void countChar(const char* s, char c, std::size_t& ret) {
         ret = 0;
-        while(*s++ != '\0') { //Until the end of the string
+        while(*s != '\0') { //Until the end of the string
             if(*s == c) {
                 ++ret;
             }
+            ++s;
         }
     }
 
