@@ -3,6 +3,8 @@ pliib: Some common C++ utility functions for bioinformatics
 Eric T Dawson  
 December 2015
 
+![C/C++ CI for pliib](https://github.com/edawson/pliib/workflows/C/C++%20CI%20for%20pliib/badge.svg)
+
 ### Functionality
 There are two main kinds of functions in this library:  
   - String manipulation  
