@@ -56,13 +56,18 @@ namespace pliib{
 
     inline void strcopy(const char* src, char*& dest){
         pliib::strcopy(src, strlen(src), dest);
-    }; 
+    }
    
     inline void strdelete(char*& p){
         if (p != nullptr){
             delete [] p;
         }
     } 
+
+    template<T>
+    inline void fill_array(T*& arr, T val, std::size_t n){
+        memset(arr, val, n * sizeof(T))
+    }
 
     // Check a string (as a char*) for non-canonical DNA bases
     inline bool canonical(const char* x, std::size_t len){
