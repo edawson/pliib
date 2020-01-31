@@ -65,9 +65,9 @@ namespace pliib{
     } 
 
     // Check a string (as a char*) for non-canonical DNA bases
-    inline bool canonical(const char* x, int len){
+    inline bool canonical(const char* x, std::size_t len){
         bool trip = false;
-        for (size_t i = 0; i < len; ++i){
+        for (std::size_t i = 0; i < len; ++i){
             trip |= valid_dna[ static_cast<int> (x[i]) ];
         }
         return !trip;
@@ -75,13 +75,13 @@ namespace pliib{
 
     inline bool canonical(std::string seq){
         const char* x = seq.c_str();
-        int len = seq.length();
+        auto len = seq.length();
         return canonical(x, len);
     }
 
 
-    inline void reverse_complement(const char* seq, char*& ret, int len){
-        for (size_t i = len - 1; i >=0; i--){
+    inline void reverse_complement(const char* seq, char*& ret, std::size_t len){
+        for (std::size_t i = len - 1; i >=0; i--){
             ret[ len - 1 - i ] = (char) complement_array[ (int) seq[i] - 65];
         }
     }
@@ -92,8 +92,8 @@ namespace pliib{
 
     /* Capitalize all characters in a string */
     /* Capitalize a C string */
-    inline void to_upper(char* seq, int length){
-        for (size_t i = 0; i < length; i++){
+    inline void to_upper(char* seq, std::size_t length){
+        for (std::size_t i = 0; i < length; i++){
             char c = seq[i];
             seq[i] = ( (c - 91) > 0 ? c - 32 : c);
         }
@@ -101,31 +101,32 @@ namespace pliib{
 
     /* Capitalize a string */
     inline std::string to_upper(std::string& seq){
-        for (size_t i = 0; i < seq.length(); i++){
+        for (std::size_t i = 0; i < seq.length(); i++){
             char c = seq[i];
             seq[i] =  ((c - 91) > 0 ? c - 32 : c);
         }
         return seq;
     }
 
-    inline void countChar(const char* s, char c, int& ret) {
+    inline void countChar(const char* s, char c, std::size_t& ret) {
         ret = 0;
-        while(*s++ != '\0') { //Until the end of the string
+        while(*s != '\0') { //Until the end of the string
             if(*s == c) {
                 ++ret;
             }
+            ++s;
         }
     }
 
-    inline void destroy_splits(char**& splits, const int& num_splits, int*& split_sizes){
+    inline void destroy_splits(char**& splits, const std::size_t& num_splits, int*& split_sizes){
         delete [] splits;
         delete [] split_sizes;
     }
 
     // Modified from: https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
-    inline void split(char*& s, char delimiter, char**& ret, int& retsize, int*& split_sizes){
-        int num_delim = 0;
-        pliib::countChar(s, delimiter, num_delim);
+    inline void split(char*& s, char delimiter, char**& ret, std::size_t& retsize, int*& split_sizes){
+        std::size_t num_delim = 0;
+        countChar(s, delimiter, num_delim);
 
         ret = new char*[num_delim + 1];
         retsize = num_delim + 1;
@@ -156,13 +157,13 @@ namespace pliib{
 
     inline void split(std::string s, char delim, std::vector<std::string>& ret){
 
-        int slen = s.length();
+        auto slen = s.length();
         char* s_to_split = new char[slen + 1];
         strncpy(s_to_split, s.c_str(), slen);
         s_to_split[slen] = '\0';
 
         char** splitret;
-        int retsz;
+        std::size_t retsz;
         int* splitsz;
 
         split(s_to_split, delim, splitret, retsz, splitsz);
@@ -179,14 +180,14 @@ namespace pliib{
     inline std::vector<std::string> split(const std::string s, const char delim){
     
         std::vector<std::string> ret;
-        int slen = s.length();
+        auto slen = s.length();
         char* s_to_split = new char[slen + 1];
 
         std::strncpy(s_to_split, s.c_str(), slen);
         s_to_split[slen] = '\0';
 
         char** splitret;
-        int retsz;
+        std::size_t retsz;
         int* splitsz;
 
 
@@ -215,7 +216,7 @@ namespace pliib{
     }
     inline std::string join(const std::vector<std::string>& splits, char glue){
         std::stringstream ret;
-        for (size_t i = 0; i < splits.size(); i++){
+        for (std::size_t i = 0; i < splits.size(); i++){
             if (i != 0){
                 ret << glue;
             }
@@ -229,8 +230,8 @@ namespace pliib{
      * first appearance of 'delim'.
      * If delim is the first character, returns an empty string. **/
 
-    inline void trim_after_char(char*&s, const int& len, char delim){
-        int d_index = 0;
+    inline void trim_after_char(char*&s, const std::size_t& len, char delim){
+        std::size_t d_index = 0;
         while(  d_index < len && s[d_index] != delim){
             ++d_index;
         }
@@ -248,16 +249,16 @@ namespace pliib{
      *  Returns a new string with all such occurrences of 'r' removed.
      *  s is destroyed in the process and replaced by a new string.
      *  Works like python's "strip(char)" function. **/
-    inline void strip(char*& s, const int& len, char r){
-        int start = 0;
-        int end = len - 1;
+    inline void strip(char*& s, const std::size_t& len, char r){
+        std::size_t start = 0;
+        std::size_t end = len - 1;
         while (start < len && s[start] == r){
             ++start;
         }
         while(end > 0 && s[end] == r){
             --end;
         }
-        int rsz = end - start + 1;
+        std::size_t rsz = end - start + 1;
         char* ret = new char[rsz + 1];
         memcpy(ret, s + start, rsz * sizeof(char));
         // cerr << ret << endl;
@@ -267,23 +268,23 @@ namespace pliib{
     }
 
     inline void strip(std::string& s, char r){
-        int slen = s.length();
+        auto slen = s.length();
         char* t = new char[slen + 1];
         memcpy(t, s.c_str(), slen);
         strip(t, slen, r);
         s = std::string(t);
     }
 
-    inline void slice(const char* s, size_t start, size_t end, char*& ret){
+    inline void slice(const char* s, std::size_t start, std::size_t end, char*& ret){
        strcopy(s + start, end - start, ret); 
     }
 
 
     /** Removes a character from within a string **/
-    inline void remove_char(char*& s, const int& len, char r){
-        int write_index = 0;
-        int read_index = 0;
-        for (size_t i = 0; i < len, read_index < len; ++i){
+    inline void remove_char(char*& s, const std::size_t& len, char r){
+        std::size_t write_index = 0;
+        std::size_t read_index = 0;
+        for (std::size_t i = 0; i < len && read_index < len; ++i){
             if (s[i] != r){
                 s[write_index] = s[read_index];
                 ++write_index;
@@ -296,9 +297,9 @@ namespace pliib{
     /** Removes any null or whitespace characters from within a string
      *  where whitespace is ' ' or '\t' or '\n'.
      *  Complexity: linear time in |s| **/
-    inline void remove_nulls_and_whitespace(char*& s, const int& len){
-        size_t write_index = 0;
-        for (size_t i = 0; i < len; ++i){
+    inline void remove_nulls_and_whitespace(char*& s, const std::size_t& len){
+        std::size_t write_index = 0;
+        for (std::size_t i = 0; i < len; ++i){
             if (s[i] != '\n' && s[i] != '\t' && s[i] != '\0' && s[i] != ' '){
                 s[write_index] = s[i];
                 ++write_index;
@@ -307,18 +308,18 @@ namespace pliib{
         s[write_index] = '\0';
     }
 
-    inline void paste(const char** splits, const int& numsplits, const int* splitlens, char*& ret){
+    inline void paste(const char** splits, const std::size_t& numsplits, const std::size_t* splitlens, char*& ret){
 
-        int sz = 0;
-        for (size_t i = 0; i < numsplits; ++i){
+        std::size_t sz = 0;
+        for (std::size_t i = 0; i < numsplits; ++i){
             sz += splitlens[i];
         }
         ret = new char[sz + 1];
         ret[sz] = '\0';
 
-        int r_pos = 0;
-        for (size_t i = 0; i < numsplits; ++i){
-            for (size_t j = 0; j < splitlens[i]; ++j){
+        std::size_t r_pos = 0;
+        for (std::size_t i = 0; i < numsplits; ++i){
+            for (std::size_t j = 0; j < splitlens[i]; ++j){
                 ret[r_pos] = splits[i][j];
                 ++r_pos;
             }
@@ -340,7 +341,7 @@ namespace pliib{
     template<typename X>
     inline std::string join(X* x, std::size_t xlen, char glue){
         std::ostringstream ret;
-        for (size_t i = 0; i < xlen; ++i){
+        for (std::size_t i = 0; i < xlen; ++i){
             if (i != 0){
                 ret << glue;
             }
@@ -410,9 +411,9 @@ namespace pliib{
     template <typename DataType, typename A>
         inline std::vector<DataType, A> p_vv_map(const std::vector<DataType, A> v, typename std::function<DataType(DataType)> lambda){
             std::vector<DataType> results(v.size());
-            size_t sz = v.size();
+            std::size_t sz = v.size();
             #pragma omp parallel for
-            for (size_t i = 0; i < sz; ++i){
+            for (std::size_t i = 0; i < sz; ++i){
                 results[i] = lambda(v[i]);
             }
 
@@ -426,8 +427,8 @@ namespace pliib{
     template<typename DataType, typename A>
         inline std::vector<DataType, A> p_vv_filter(const std::vector<DataType, A>& v, typename std::function<bool(DataType)> lambda){
             std::vector<DataType> results;
-            size_t sz = v.size();
-            for (size_t i = 0; i < sz; ++i){
+            std::size_t sz = v.size();
+            for (std::size_t i = 0; i < sz; ++i){
                 if (lambda(v[i])){
                     results.push_back(v[i]);
                 }
@@ -443,7 +444,7 @@ namespace pliib{
     template<typename DataType, typename A>
         inline void p_vv_apply(std::vector<DataType, A>& v, typename std::function<DataType(DataType)> lambda){
             #pragma omp parallel for //private(i)
-            for (size_t i = 0; i < v.size(); i++){
+            for (std::size_t i = 0; i < v.size(); i++){
                 auto r = lambda(v[i]);
 
                 #pragma omp atomic write
