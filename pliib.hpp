@@ -7,8 +7,8 @@
 #include <cstring>
 #include <vector>
 #include <functional>
+#include <algorithm>
 #include <omp.h>
-#include <functional>
 
 namespace pliib{
 
@@ -64,9 +64,14 @@ namespace pliib{
         }
     } 
 
-    template<T>
+    template<class T>
     inline void fill_array(T*& arr, T val, std::size_t n){
-        memset(arr, val, n * sizeof(T))
+	if (val == 0){
+	    memset(arr, (T) val, n * sizeof(arr[0]));
+	}
+	else{
+	    std::fill(arr, arr + n, val);
+	}
     }
 
     // Check a string (as a char*) for non-canonical DNA bases
