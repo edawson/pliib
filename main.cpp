@@ -8,7 +8,7 @@ int main(){
     string s ("A;StrING;DeLIMITeD:.;by;");
     pliib::strcopy(s.c_str(), to_split);
     char** ret;
-    int retsz;
+    std::size_t retsz;
     int* split_sizes;
     split(to_split, ';', ret, retsz, split_sizes);
 
