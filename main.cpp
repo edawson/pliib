@@ -9,7 +9,7 @@ int main(){
     pliib::strcopy(s.c_str(), s.length(), to_split);
     cout << "Copied " << s << " to " << to_split << endl;
     char** ret;
-    int retsz;
+    std::size_t retsz;
     int* split_sizes;
     split(to_split, ';', ret, retsz, split_sizes);
 
