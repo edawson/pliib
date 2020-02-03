@@ -7,11 +7,11 @@
 #include <cstring>
 #include <vector>
 #include <functional>
+#include <algorithm>
 #include <omp.h>
-#include <functional>
-
 
 namespace pliib{
+
     // Char table to test for canonical bases
     static const int valid_dna[127] = {
         1,
@@ -55,14 +55,24 @@ namespace pliib{
     }
 
     inline void strcopy(const char* src, char*& dest){
-        strcopy(src, strlen(src), dest);
-    } 
+        pliib::strcopy(src, strlen(src), dest);
+    }
    
     inline void strdelete(char*& p){
         if (p != nullptr){
             delete [] p;
         }
     } 
+
+    template<class T>
+    inline void fill_array(T*& arr, T val, std::size_t n){
+	if (val == 0){
+	    memset(arr, (T) val, n * sizeof(arr[0]));
+	}
+	else{
+	    std::fill(arr, arr + n, val);
+	}
+    }
 
     // Check a string (as a char*) for non-canonical DNA bases
     inline bool canonical(const char* x, std::size_t len){
@@ -172,7 +182,7 @@ namespace pliib{
         for (std::size_t i = 0; i < retsz; ++i){
             ret[i].assign(std::string( splitret[i])); 
         }
-        destroy_splits(splitret, retsz, splitsz);
+        pliib::destroy_splits(splitret, retsz, splitsz);
         delete [] s_to_split;
 
     }
@@ -183,7 +193,7 @@ namespace pliib{
         auto slen = s.length();
         char* s_to_split = new char[slen + 1];
 
-        strncpy(s_to_split, s.c_str(), slen);
+        std::strncpy(s_to_split, s.c_str(), slen);
         s_to_split[slen] = '\0';
 
         char** splitret;
@@ -191,14 +201,14 @@ namespace pliib{
         int* splitsz;
 
 
-        split(s_to_split, delim, splitret, retsz, splitsz);
+        pliib::split(s_to_split, delim, splitret, retsz, splitsz);
 
         ret.resize(retsz);
 
         for (std::size_t i = 0; i < retsz; ++i){
             ret[i].assign(std::string( splitret[i])); 
         }
-        destroy_splits(splitret, retsz, splitsz);
+        pliib::destroy_splits(splitret, retsz, splitsz);
         delete [] s_to_split;
 
         return ret;
@@ -208,7 +218,7 @@ namespace pliib{
         std::vector<std::string> ret;
         std::stringstream sstream(s);
         std::string temp;
-        while(getline(sstream, temp, delim)){
+        while(std::getline(sstream, temp, delim)){
             ret.push_back(temp);
         }
         return ret;
@@ -351,7 +361,7 @@ namespace pliib{
     }
 
     // TODO convert to template
-    inline std::string join(uint64_t* x, std::size_t xlen, char glue){
+    inline std::string join(std::uint64_t* x, int xlen, char glue){
         std::stringstream ret;
         for (std::size_t i = 0; i < xlen; i++){
             if (i != 0){

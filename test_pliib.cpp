@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <cstdint>
 
 using namespace std;
 using namespace pliib;
@@ -49,4 +50,24 @@ TEST_CASE("fast split function performs as expected", "[split]"){
     }
 
     delete[] to_split;
+}
+
+TEST_CASE("pliib can fill arrays using its fill_array function", "[fill_array]"){
+	int* x = new int[25];
+	x[0] = 1;
+	pliib::fill_array(x, 0, 25);
+	REQUIRE(x[0] == 0);
+	REQUIRE(x[10] == 0);
+
+	delete [] x;
+	
+	uint64_t* x_long = new uint64_t[1000];
+	pliib::fill_array<uint64_t>(x_long, 0, 1000);
+	REQUIRE(x_long[0] == 0);
+	REQUIRE(x_long[100] == 0);
+	pliib::fill_array<uint64_t>(x_long, 10, 1000);
+	REQUIRE(x_long[0] == 10);
+	REQUIRE(x_long[100] == 10);
+	delete [] x_long;
+
 }

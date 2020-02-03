@@ -6,7 +6,8 @@ int main(){
     
     char* to_split;
     string s ("A;StrING;DeLIMITeD:.;by;");
-    pliib::strcopy(s.c_str(), to_split);
+    pliib::strcopy(s.c_str(), s.length(), to_split);
+    cout << "Copied " << s << " to " << to_split << endl;
     char** ret;
     std::size_t retsz;
     int* split_sizes;
@@ -45,5 +46,10 @@ int main(){
     //for (i = 0; i < y.size(); i++){
     //    cerr << "Vector elem: " << i << " : " << y[i] << endl;
     //}
+    
+
+    int* to_fill = new int[25];
+    pliib::fill_array(to_fill, 0, 25);
+
     return 0;
 }
