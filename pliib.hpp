@@ -361,7 +361,7 @@ namespace pliib{
     }
 
     // TODO convert to template
-    inline std::string join(std::uint64_t* x, int xlen, char glue){
+    inline std::string join(std::uint64_t* x, std::size_t xlen, char glue){
         std::stringstream ret;
         for (std::size_t i = 0; i < xlen; i++){
             if (i != 0){
