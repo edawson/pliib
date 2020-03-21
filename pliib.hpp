@@ -128,19 +128,19 @@ namespace pliib{
         }
     }
 
-    inline void destroy_splits(char**& splits, const std::size_t& num_splits, int*& split_sizes){
+    inline void destroy_splits(char**& splits, const std::size_t& num_splits, std::size_t*& split_sizes){
         delete [] splits;
         delete [] split_sizes;
     }
 
     // Modified from: https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
-    inline void split(char*& s, char delimiter, char**& ret, std::size_t& retsize, int*& split_sizes){
+    inline void split(char*& s, char delimiter, char**& ret, std::size_t& retsize, std::size_t*& split_sizes){
         std::size_t num_delim = 0;
         countChar(s, delimiter, num_delim);
 
         ret = new char*[num_delim + 1];
         retsize = num_delim + 1;
-        split_sizes = new int[num_delim + 1];
+        split_sizes = new std::size_t[num_delim + 1];
 
         ret[0] = s;
 
@@ -174,7 +174,7 @@ namespace pliib{
 
         char** splitret;
         std::size_t retsz;
-        int* splitsz;
+        std::size_t* splitsz;
 
         split(s_to_split, delim, splitret, retsz, splitsz);
         ret.resize(retsz);
@@ -198,7 +198,7 @@ namespace pliib{
 
         char** splitret;
         std::size_t retsz;
-        int* splitsz;
+        std::size_t* splitsz;
 
 
         pliib::split(s_to_split, delim, splitret, retsz, splitsz);
