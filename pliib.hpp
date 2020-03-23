@@ -48,6 +48,19 @@ namespace pliib{
         COMPLEX
     };
 
+    inline bool is_numeric_string(char*& s, std::size_t& len){
+        bool ret = true;
+        for (std::size_t i = 0; i < len; ++i){
+            ret &= (s[i] == 45 || (s[i] <= 57 && s[i] >= 48)); 
+        }
+        return ret;
+    }
+
+    inline bool is_numeric_string(char*& s){
+        std:size_t len = strlen(s);
+        return is_numeric_string(s, len);
+    }
+
     inline void strcopy(const char* src, const std::size_t& len, char*& dest){
        dest = new char[len+1];
        dest[len] = '\0';

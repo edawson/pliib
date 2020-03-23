@@ -23,7 +23,7 @@ TEST_CASE("fast split function performs as expected", "[split]"){
 
     char** ret;
     std::size_t retsz;
-    int* split_sizes;
+    std::size_t* split_sizes;
     split(to_split, ';', ret, retsz, split_sizes);
 
     //for (int i = 0; i < retsz; ++i){
@@ -70,4 +70,11 @@ TEST_CASE("pliib can fill arrays using its fill_array function", "[fill_array]")
 	REQUIRE(x_long[100] == 10);
 	delete [] x_long;
 
+}
+
+TEST_CASE("is_numeric_string performs as expected.", "[is_numeric_string]"){
+    char* s = "12345";
+    char* t = "12Eg5";
+    REQUIRE(is_numeric_string(s) == true);
+    REQUIRE(is_numeric_string(t) == false);
 }
