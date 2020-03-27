@@ -10,7 +10,7 @@ int main(){
     cout << "Copied " << s << " to " << to_split << endl;
     char** ret;
     std::size_t retsz;
-    int* split_sizes;
+    std::size_t* split_sizes;
     split(to_split, ';', ret, retsz, split_sizes);
 
     for (int i = 0; i < retsz; ++i){
