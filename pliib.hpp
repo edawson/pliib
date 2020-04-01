@@ -57,7 +57,7 @@ namespace pliib{
     }
 
     inline bool is_numeric_string(char*& s){
-        std:size_t len = strlen(s);
+        std::size_t len = strlen(s);
         return is_numeric_string(s, len);
     }
 
