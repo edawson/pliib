@@ -131,6 +131,20 @@ namespace pliib{
         return seq;
     }
 
+    inline void reverse_inplace(char*& s, std::size_t len){
+        char tmp;
+        for (std::size_t i = 0; i < len; ++i){
+            tmp = s[len - i];
+            s[ len - i ] = s[i];
+            s[i] = tmp;
+        }
+    }
+
+    inline void reverse(const char*& s, std::size_t len, char*& ret){
+        strcopy(s, ret);
+        reverse_inplace(ret, len);
+    }
+
     inline void countChar(const char* s, char c, std::size_t& ret) {
         ret = 0;
         while(*s != '\0') { //Until the end of the string
