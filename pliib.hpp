@@ -133,10 +133,10 @@ namespace pliib{
 
     inline void reverse_inplace(char*& s, std::size_t len){
         char tmp;
-        for (std::size_t i = 0; i < len; ++i){
-            tmp = s[len - i];
-            s[ len - i ] = s[i];
-            s[i] = tmp;
+        for (std::size_t i = 0; i < len/2 ; ++i){
+            tmp = s[i];
+            s[i] = s[len-i-1];
+            s[len-i-1]=tmp;
         }
     }
 
@@ -311,11 +311,13 @@ namespace pliib{
         strip(t, slen, r);
         s = std::string(t);
     }
-
     inline void slice(const char* s, std::size_t start, std::size_t end, char*& ret){
        strcopy(s + start, end - start, ret); 
     }
 
+    inline void substr(const char* s, std::size_t start, std::size_t end, char*& ret){
+        return slice(s, start, end, ret);
+    }
 
     /** Removes a character from within a string **/
     inline void remove_char(char*& s, const std::size_t& len, char r){
