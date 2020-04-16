@@ -171,6 +171,20 @@ inline std::string to_upper(std::string& seq){
     return seq;
 }
 
+inline void reverse_inplace(char*& s, std::size_t len){
+    char tmp;
+    for (std::size_t i = 0; i < len/2 ; ++i){
+        tmp = s[i];
+        s[i] = s[len-i-1];
+        s[len-i-1]=tmp;
+    }
+}
+
+inline void reverse(const char*& s, std::size_t len, char*& ret){
+    strcopy(s, ret);
+    reverse_inplace(ret, len);
+}
+
 inline void countChar(const char* s, char c, std::size_t& ret) {
     ret = 0;
     while(*s != '\0') { //Until the end of the string
@@ -330,6 +344,7 @@ inline void strip(char*& s, const std::size_t& len, char r){
     s = ret;
 }
 
+
 inline void strip(std::string& s, char r){
     auto slen = s.length();
     char* t = new char[slen + 1];
@@ -338,10 +353,15 @@ inline void strip(std::string& s, char r){
     s = std::string(t);
 }
 
+
 inline void slice(const char* s, std::size_t start, std::size_t end, char*& ret){
     strcopy(s + start, end - start, ret); 
 }
 
+
+inline void substr(const char* s, std::size_t start, std::size_t end, char*& ret){
+    return slice(s, start, end, ret);
+}
 
 /** Removes a character from within a string **/
 inline void remove_char(char*& s, const std::size_t& len, char r){
@@ -473,11 +493,11 @@ namespace mmapable{
         return sysconf(_SC_PAGESIZE); //::getpagesize();
     }
     enum CacheHint
-  {
-    Normal,         ///< good overall performance
-    SequentialScan, ///< read file only once with few seeks
-    RandomAccess    ///< jump around
-  };
+    {
+        Normal,         ///< good overall performance
+        SequentialScan, ///< read file only once with few seeks
+        RandomAccess    ///< jump around
+    };
 }
 
 
@@ -550,7 +570,7 @@ struct MMAP_FILE{
         if (!closed) close();
         delete file_name;
     }
-    void open(const char* filename, std::size_t mapped_bytes){
+    void open(const char* filename, std::size_t mapped_bytes = 0){
         if (is_good & !closed){
             return;
         }
@@ -582,7 +602,7 @@ struct MMAP_FILE{
         return reinterpret_cast<unsigned char*>(map_buffer)[offset];
     }
     unsigned char at(std::size_t offset) const{
-        
+
         if (offset > file_size){
             throw std::out_of_range("offset greater than file size of mmap-ed file.");
         }

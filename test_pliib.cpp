@@ -73,8 +73,36 @@ TEST_CASE("pliib can fill arrays using its fill_array function", "[fill_array]")
 }
 
 TEST_CASE("is_numeric_string performs as expected.", "[is_numeric_string]"){
-    char* s = "12345";
-    char* t = "12Eg5";
+    char* s;
+    std::string spre("12345");
+    pliib::strcopy(spre.c_str(), s);
+    char* t;
+    std::string tpre("12Eg5");
+    pliib::strcopy(tpre.c_str(), t);
     REQUIRE(is_numeric_string(s) == true);
     REQUIRE(is_numeric_string(t) == false);
+}
+
+TEST_CASE("reversing a string produces the expected results", "[reverse]"){
+    std::string pre ("AAATTGGCC");
+    std::string pre_long ("AAATTGGCCAAAAAAGGG");
+    char* sr;
+    char* sr_long;
+    pliib::strcopy(pre.c_str(), sr);
+    pliib::strcopy(pre.c_str(), sr_long);
+    pliib::reverse_inplace(sr, 9);
+    pliib::reverse_inplace(sr_long, 9);
+    char* sr_long_sub;
+    pliib::substr(sr_long, 0, 9, sr_long_sub);
+    REQUIRE(strcmp(sr, "CCGGTTAAA") == 0);
+    REQUIRE(strcmp(sr_long_sub, "CCGGTTAAA") == 0);
+}
+
+TEST_CASE("pliib can MMAP a file.", "[mmap]"){
+    std::string mfile("data/gfa_2.gfa");
+    MMAP_FILE mf(mfile.c_str());
+    REQUIRE(mf.file_size == 1398);
+    REQUIRE(mf.at(0) == 'H');
+
+
 }
