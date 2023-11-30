@@ -107,26 +107,26 @@ inline void countChar(const char *s, char c, std::size_t &ret) {
 }
 
 inline void destroy_splits(char **&splits, const std::size_t &num_splits,
-                           int *&split_sizes) {
+                           size_t *&split_sizes) {
   delete[] splits;
   delete[] split_sizes;
 }
 
 // Modified from:
 // https://techoverflow.net/2017/01/23/zero-copy-in-place-string-splitting-in-c/
-inline void split(char *&s, char delimiter, char **&ret, std::size_t &retsize,
-                  int *&split_sizes) {
+inline void split(char *&s, const char delimiter, char **&ret,
+                  std::size_t &retsize, size_t *&split_sizes) {
   std::size_t num_delim = 0;
   countChar(s, delimiter, num_delim);
 
   ret = new char *[num_delim + 1];
   retsize = num_delim + 1;
-  split_sizes = new int[num_delim + 1];
+  split_sizes = new size_t[num_delim + 1];
 
-  ret[0] = s;
+  ret[0] = const_cast<char *>(s);
 
   int i = 1;
-  char *hit = s;
+  char *hit = const_cast<char *>(s);
   while ((hit = strchr(hit, delimiter)) != NULL) {
     *hit = '\0';
     ++hit;
@@ -145,7 +145,8 @@ inline void split(char *&s, char delimiter, char **&ret, std::size_t &retsize,
   split_sizes[retsize - 1] = strlen(ret[retsize - 1]);
 }
 
-inline void split(std::string s, char delim, std::vector<std::string> &ret) {
+inline void split(std::string s, const char delim,
+                  std::vector<std::string> &ret) {
 
   auto slen = s.length();
   char *s_to_split = new char[slen + 1];
@@ -154,7 +155,7 @@ inline void split(std::string s, char delim, std::vector<std::string> &ret) {
 
   char **splitret;
   std::size_t retsz;
-  int *splitsz;
+  size_t *splitsz;
 
   split(s_to_split, delim, splitret, retsz, splitsz);
   ret.resize(retsz);
@@ -177,7 +178,7 @@ inline std::vector<std::string> split(const std::string s, const char delim) {
 
   char **splitret;
   std::size_t retsz;
-  int *splitsz;
+  std::size_t *splitsz;
 
   pliib::split(s_to_split, delim, splitret, retsz, splitsz);
 
@@ -339,7 +340,7 @@ inline std::string join(const X *x, const std::size_t xlen, const char glue) {
 }
 
 // TODO convert to template
-inline std::string join(const std::uint64_t *x, const int xlen,
+inline std::string join(const std::uint64_t *x, const std::size_t xlen,
                         const char glue) {
   std::stringstream ret;
   for (std::size_t i = 0; i < xlen; i++) {
